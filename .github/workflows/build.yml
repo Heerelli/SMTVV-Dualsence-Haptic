@@ -1,0 +1,51 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Build (Reloaded-II and manual)
+        shell: cmd
+        run: |
+          call build_reloaded.bat || exit /b 1
+          call build.bat || exit /b 1
+
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          # 1) Reloaded-II: zip contains the mod folder, drag it onto Reloaded-II
+          Compress-Archive -Path out/reloaded/heerelli.smtvv.dualsense.haptic -DestinationPath dist/SMTVV-DualSense-Haptic-ReloadedII.zip -Force
+          # 2) Manual install: files that go into Project/Binaries/Win64
+          New-Item -ItemType Directory -Force pkg/manual | Out-Null
+          Copy-Item out/xinput1_3.dll pkg/manual/
+          Copy-Item SMT5V-Haptics.DualSense-section.ini pkg/manual/
+          Compress-Archive -Path pkg/manual/* -DestinationPath dist/SMTVV-DualSense-Haptic-Manual.zip -Force
+          Get-ChildItem dist
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: SMTVV-DualSense-Haptic
+          path: dist/*.zip
+
+      - name: Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          prerelease: true
