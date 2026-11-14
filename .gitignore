@@ -1,0 +1,7 @@
+out/
+*.obj
+*.lib
+*.exp
+*.pdb
+*.ilk
+*.log
