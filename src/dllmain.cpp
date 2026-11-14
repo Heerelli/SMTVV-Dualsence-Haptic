@@ -33,7 +33,7 @@
 #pragma comment(lib, "ole32.lib")
 #pragma comment(lib, "user32.lib")
 
-#define BRIDGE_VERSION "0.2"
+#define BRIDGE_VERSION "0.2.1"
 
 #ifndef SMT5V_RELOADED
 // Export forwarders: names and ordinals mirror SMT5V Haptics v0.6 (see src/exports.def for the table).
@@ -138,11 +138,12 @@ enum Kind { K_NORMAL, K_CRITICAL, K_WEAK, K_GUARD, K_SOUND, K_HEAL, K_COUNT };
 
 static const Pattern kPatterns[K_COUNT] = {
     // name        layers: f0   f1  start  len   L     R
-    { "normal",   2, { { 70,  60,   0,   90, 0.80f, 0.80f }, { 180, 180,  0,  25, 0.40f, 0.40f } } },
-    { "critical", 3, { { 220, 200,  0,   20, 0.90f, 0.90f }, {  45,  40,  0,  80, 1.00f, 1.00f },
-                       { 65,  50,  60,  170, 0.70f, 0.70f } } },
-    { "weak",     3, { { 130, 130,  0,   35, 0.90f, 0.30f }, { 130, 130, 70,  35, 0.30f, 0.90f },
-                       { 60,  55,   0,  130, 0.50f, 0.50f } } },
+    // Distinct rhythms first, timbre second: one tap / tap+long thump / three quick taps.
+    { "normal",   2, { { 80,  70,   0,   45, 0.55f, 0.55f }, { 200, 200,  0,  12, 0.35f, 0.35f } } },
+    { "critical", 4, { { 250, 230,  0,   15, 1.00f, 1.00f }, {  45,  38, 10, 120, 1.00f, 1.00f },
+                       { 60,  45, 110,  260, 0.80f, 0.80f }, {  32,  30,  0, 380, 0.40f, 0.40f } } },
+    { "weak",     3, { { 150, 150,  0,   30, 1.00f, 0.20f }, { 150, 150, 90,  30, 0.20f, 1.00f },
+                       { 150, 150, 180,  30, 1.00f, 1.00f } } },
     { "guard",    2, { { 260, 240,  0,   18, 0.70f, 0.70f }, {  40,  40, 10,  60, 0.35f, 0.35f } } },
     { "sound",    2, { { 90,  80,   0,  120, 0.60f, 0.60f }, {  50,  45,  0, 180, 0.40f, 0.40f } } },
     { "heal",     1, { { 160, 240,  0,  240, 0.25f, 0.25f } } },
