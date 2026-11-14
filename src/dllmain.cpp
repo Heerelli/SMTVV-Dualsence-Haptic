@@ -35,6 +35,25 @@
 
 #define BRIDGE_VERSION "0.2"
 
+#ifndef SMT5V_RELOADED
+// Export forwarders: names and ordinals mirror SMT5V Haptics v0.6 (see src/exports.def for the table).
+#pragma comment(linker, "/export:XInputGetState=SMT5VHapticsCore.XInputGetState,@2")
+#pragma comment(linker, "/export:XInputSetState=SMT5VHapticsCore.XInputSetState,@3")
+#pragma comment(linker, "/export:XInputGetCapabilities=SMT5VHapticsCore.XInputGetCapabilities,@4")
+#pragma comment(linker, "/export:XInputEnable=SMT5VHapticsCore.XInputEnable,@5")
+#pragma comment(linker, "/export:XInputGetDSoundAudioDeviceGuids=SMT5VHapticsCore.XInputGetDSoundAudioDeviceGuids,@6")
+#pragma comment(linker, "/export:XInputGetBatteryInformation=SMT5VHapticsCore.XInputGetBatteryInformation,@7")
+#pragma comment(linker, "/export:XInputGetKeystroke=SMT5VHapticsCore.XInputGetKeystroke,@8")
+#pragma comment(linker, "/export:SMT5VHapticsPoCStatus=SMT5VHapticsCore.SMT5VHapticsPoCStatus,@9")
+#pragma comment(linker, "/export:SMT5VHapticsEventNormal=SMT5VHapticsCore.SMT5VHapticsEventNormal,@10")
+#pragma comment(linker, "/export:SMT5VHapticsEventCritical=SMT5VHapticsCore.SMT5VHapticsEventCritical,@11")
+#pragma comment(linker, "/export:SMT5VHapticsEventWeak=SMT5VHapticsCore.SMT5VHapticsEventWeak,@12")
+#pragma comment(linker, "/export:SMT5VHapticsEventSound=SMT5VHapticsCore.SMT5VHapticsEventSound,@13")
+#pragma comment(linker, "/export:SMT5VHapticsEventGuard=SMT5VHapticsCore.SMT5VHapticsEventGuard,@14")
+#pragma comment(linker, "/export:SMT5VHapticsEventHeal=SMT5VHapticsCore.SMT5VHapticsEventHeal,@15")
+#endif
+
+
 // ───────────────────────────── globals / config ─────────────────────────────
 static HMODULE g_self, g_core, g_sysXInput;
 static wchar_t g_dir[MAX_PATH], g_ini[MAX_PATH], g_logPath[MAX_PATH];

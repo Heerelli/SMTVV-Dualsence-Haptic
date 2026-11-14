@@ -1,3 +1,4 @@
+; Reference table only - the forwarders are emitted by #pragma comment(linker) in dllmain.cpp.
 ; SMT5V DualSense haptic bridge.
 ; Every export is forwarded to the original mod, renamed to SMT5VHapticsCore.dll.
 ; Names and ordinals mirror SMT5V Haptics v0.6 exactly.
