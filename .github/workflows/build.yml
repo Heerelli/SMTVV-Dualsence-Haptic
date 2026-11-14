@@ -33,7 +33,7 @@ jobs:
           $p = dumpbin /nologo /exports out\xinput1_3.dll | Out-String
           $n = ([regex]::Matches($p, 'forwarded to SMT5VHapticsCore\.')).Count
           Write-Host "forwarders: $n"; if ($n -ne 14) { Write-Error "expected 14 forwarders"; exit 1 }
-          $r = dumpbin /nologo /exports out\reloaded\heerelli.smtvv.dualsense.haptic\SMTVVDualSenseHaptic.dll | Out-String
+          $r = dumpbin /nologo /exports out\reloaded\smtvv.dualsense.haptic\SMTVVDualSenseHaptic.dll | Out-String
           if ($r -notmatch 'ReloadedStart') { Write-Error "ReloadedStart export missing"; exit 1 }
           Write-Host "ReloadedStart export OK"
 
@@ -42,7 +42,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force dist | Out-Null
           # 1) Reloaded-II: ModConfig.json at the zip root, like Reloaded-II's own published mods
-          Compress-Archive -Path out/reloaded/heerelli.smtvv.dualsense.haptic/* -DestinationPath dist/SMTVV-DualSense-Haptic-ReloadedII.zip -Force
+          Compress-Archive -Path out/reloaded/smtvv.dualsense.haptic/* -DestinationPath dist/SMTVV-DualSense-Haptic-ReloadedII.zip -Force
           # 2) Manual install: files that go into Project/Binaries/Win64
           New-Item -ItemType Directory -Force pkg/manual | Out-Null
           Copy-Item out/xinput1_3.dll pkg/manual/

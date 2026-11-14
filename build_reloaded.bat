@@ -1,7 +1,7 @@
 @echo off
 rem Run from "x64 Native Tools Command Prompt for VS 2022".
-rem Produces a Reloaded-II mod folder: out\reloaded\heerelli.smtvv.dualsense.haptic\
-set MODDIR=out\reloaded\heerelli.smtvv.dualsense.haptic
+rem Produces a Reloaded-II mod folder: out\reloaded\smtvv.dualsense.haptic\
+set MODDIR=out\reloaded\smtvv.dualsense.haptic
 if not exist %MODDIR% mkdir %MODDIR%
 if not exist out\obj_reloaded mkdir out\obj_reloaded
 cl /nologo /O2 /MT /W4 /EHsc /LD /DUNICODE /D_UNICODE /DSMT5V_RELOADED src\dllmain.cpp ^

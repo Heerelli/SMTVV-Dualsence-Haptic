@@ -71,7 +71,7 @@ Releases의 zip은 GitHub Actions(`.github/workflows/build.yml`)가 자동으로
 
 | 설치 방식 | 실행 | 결과물 |
 | --- | --- | --- |
-| Reloaded-II | `build_reloaded.bat` | `out\reloaded\heerelli.smtvv.dualsense.haptic\` 폴더 (`SMTVVDualSenseHaptic.dll` + `ModConfig.json`) |
+| Reloaded-II | `build_reloaded.bat` | `out\reloaded\smtvv.dualsense.haptic\` 폴더 (`SMTVVDualSenseHaptic.dll` + `ModConfig.json`) |
 | 게임 폴더 직접 | `build.bat` | `out\xinput1_3.dll` |
 
 ## 설치
@@ -86,13 +86,13 @@ Releases의 zip을 쓰는 경우, Reloaded-II용은 `SMTVV-DualSense-Haptic-Relo
 
 1. **원본 모드 설치:** 게임을 종료하고 [SMT5V Haptics v0.6](https://github.com/snm01234/PC-SMT5V-VIB/releases) 을 원래 방법대로 설치합니다 (`Project\Binaries\Win64\` 에 `xinput1_3.dll`, `SMT5V-Haptics.ini`). **이름은 바꾸지 않습니다.**
 2. **Reloaded-II에 게임 추가:** 아직 안 했다면 Reloaded-II에서 `+` (Add an Application) 를 누르고 `SMT5V\Project\Binaries\Win64\SMT5V-Win64-Shipping.exe` 를 선택합니다.
-3. **모드 넣기:** `SMTVV-DualSense-Haptic-ReloadedII.zip` 을 Reloaded-II 창에 끌어다 놓습니다. 직접 빌드했다면 `heerelli.smtvv.dualsense.haptic` 폴더를 `Reloaded-II\Mods\` 에 복사합니다.
+3. **모드 넣기:** `SMTVV-DualSense-Haptic-ReloadedII.zip` 을 Reloaded-II 창에 끌어다 놓습니다. 직접 빌드했다면 `smtvv.dualsense.haptic` 폴더를 `Reloaded-II\Mods\` 에 복사합니다.
 4. **모드 켜기:** Reloaded-II에서 게임을 선택하고 모드 목록의 **SMTVV DualSense Haptic** 을 체크합니다.
 5. (선택) `Win64\SMT5V-Haptics.ini` 맨 아래에 `SMT5V-Haptics.DualSense-section.ini` 내용을 붙여 넣습니다. 안 넣어도 기본값으로 동작합니다.
 6. 듀얼센스를 USB로 연결하고 **Reloaded-II에서 Launch Application** 으로 실행합니다.
 
 ```text
-Reloaded-II/Mods/heerelli.smtvv.dualsense.haptic/
+Reloaded-II/Mods/smtvv.dualsense.haptic/
 ├─ ModConfig.json
 └─ SMTVVDualSenseHaptic.dll
 
@@ -167,7 +167,7 @@ SMT5V/Project/Binaries/Win64/
 
 ## 제거
 
-**방법 A (Reloaded-II):** Reloaded-II에서 모드 체크를 끄거나 `Reloaded-II\Mods\heerelli.smtvv.dualsense.haptic` 폴더를 지웁니다. 원본 모드는 그대로 동작합니다.
+**방법 A (Reloaded-II):** Reloaded-II에서 모드 체크를 끄거나 `Reloaded-II\Mods\smtvv.dualsense.haptic` 폴더를 지웁니다. 원본 모드는 그대로 동작합니다.
 
 **방법 B (직접 설치):**
 1. 이 모드의 `xinput1_3.dll` 을 삭제합니다.
