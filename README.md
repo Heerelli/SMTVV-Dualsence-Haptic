@@ -58,10 +58,13 @@ INI 설정은 손대지 않아도 기본값으로 동작합니다. 자세한 내
 | 적 턴 시작 | `btl_turn2_enemy` | guard (짧은 "탁" + 부드러운 저음) |
 | 동료(악마) 소환 | `sys_60_devil_summon` | weak (좌 "퍽" → 우 "퍽" → 양손 "쾅") |
 
-**적용 방법**
-1. 게임 `Project\Binaries\Win64\SMT5V-Haptics.ini` 를 메모장으로 엽니다.
-2. `[SoundRules]` 아래 기존 줄 다음에 [`SMT5V-Haptics.SoundRules-extra.ini`](SMT5V-Haptics.SoundRules-extra.ini) 내용을 붙여 넣고 저장합니다.
-3. 게임 중 **F4** 를 누르거나 게임을 다시 실행합니다. 원본 로그 `SMT5V-HapticsPoC.log` 에 `SOUND CONFIG rules=8` 이 찍히면 적용된 것입니다.
+**적용 방법 (덮어쓰기)**
+1. 게임을 끕니다.
+2. 이 저장소의 [`config/SMT5V-Haptics.ini`](config/SMT5V-Haptics.ini) 를 받아서, 게임 `Project\Binaries\Win64\SMT5V-Haptics.ini` 에 **덮어씌웁니다.** (기존 파일은 백업해 두세요.)
+3. 게임을 실행합니다. 원본 로그 `SMT5V-HapticsPoC.log` 에 `SOUND CONFIG rules=8` 이 찍히면 적용된 것입니다.
+
+> 덮어쓰면 진동 세기가 기본값 5로 돌아갑니다. 게임 내 `진동 세기` 에서 다시 맞추면 됩니다.
+> 직접 고친 INI를 유지하고 싶다면, 덮어쓰는 대신 [`SMT5V-Haptics.SoundRules-extra.ini`](SMT5V-Haptics.SoundRules-extra.ini) 내용을 `[SoundRules]` 아래에 붙여 넣으세요.
 
 > 이 기능은 원본 모드의 `TraceSounds=1` 과 무관하게 동작하지만, 효과음 이름이 정확히 같아야 합니다.
 > 효과음 이름과 상황의 대응은 플레이 로그를 보고 추정한 것이라, 다른 순간에 울리면 그 줄을 지우세요.
