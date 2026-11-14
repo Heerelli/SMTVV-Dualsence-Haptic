@@ -5,8 +5,19 @@
 [snm01234 님의 SMT5V Haptics (PC-SMT5V-VIB)](https://github.com/snm01234/PC-SMT5V-VIB) 는 게임에 없는 진동을 전투·필드 이벤트에 추가해 줍니다. 다만 일반 모터 진동(XInput)이라, 듀얼센스로 해도 단순한 "웅~" 진동만 납니다.
 이 모드는 그 앞에 끼워져서, 같은 이벤트를 **이벤트마다 다른 햅틱 파형**으로 바꿔 줍니다.
 
-> ⚠️ **현재 상태: v0.2 — 소스만 공개, 아직 빌드·실기 테스트 전입니다.**
-> 배포용 DLL은 아직 없습니다. 직접 빌드해야 하며, 동작이 확인되면 Releases에 올릴 예정입니다.
+> ⚠️ **현재 상태: v0.2 테스트 버전 — 빌드는 자동으로 확인되지만, 실제 게임에서는 아직 테스트 전입니다.**
+
+## 빠른 설치 (3단계)
+
+빌드할 필요 없습니다. [Releases](https://github.com/Heerelli/SMTVV-Dualsence-Haptic/releases) 에서 받으세요.
+
+1. **원본 모드 설치:** [SMT5V Haptics v0.6](https://github.com/snm01234/PC-SMT5V-VIB/releases) 을 원래 방법대로 게임의 `Project\Binaries\Win64\` 에 넣습니다.
+2. **이 모드 설치 (둘 중 하나):**
+   - **Reloaded-II를 쓴다면:** `SMTVV-DualSense-Haptic-ReloadedII.zip` 을 Reloaded-II 창에 끌어다 놓고, 모드를 체크한 뒤 Reloaded-II에서 실행합니다.
+   - **Reloaded-II가 없다면:** 원본 `xinput1_3.dll` 이름을 `SMT5VHapticsCore.dll` 로 바꾸고, `SMTVV-DualSense-Haptic-Manual.zip` 안의 `xinput1_3.dll` 을 같은 폴더에 넣습니다.
+3. **듀얼센스를 USB 케이블로 연결**하고 게임을 실행합니다. 게임 중 **F11** 을 누르면 햅틱 테스트가 나옵니다.
+
+INI 설정은 손대지 않아도 기본값으로 동작합니다. 자세한 내용은 아래를 보세요.
 
 ---
 
@@ -50,7 +61,10 @@
 > 블루투스로 연결하면 햅틱 오디오 채널이 없어서 동작하지 않습니다. 이때는 진동이 원래대로 전달됩니다.
 > USB로 연결하면 Windows 사운드 설정의 재생 장치에 **"Wireless Controller"** 가 보여야 합니다.
 
-## 빌드
+## 직접 빌드 (개발자용)
+
+Releases의 zip은 GitHub Actions(`.github/workflows/build.yml`)가 자동으로 만듭니다. 직접 빌드하려면:
+
 
 1. 시작 메뉴에서 **"x64 Native Tools Command Prompt for VS 2022"** 를 엽니다.
 2. 이 저장소 폴더로 이동해서, 설치 방식에 맞는 스크립트를 실행합니다.
@@ -62,6 +76,8 @@
 
 ## 설치
 
+Releases의 zip을 쓰는 경우, Reloaded-II용은 `SMTVV-DualSense-Haptic-ReloadedII.zip`, 직접 설치용은 `SMTVV-DualSense-Haptic-Manual.zip` 입니다.
+
 두 방식 중 **하나만** 쓰세요. 둘 다 설치하면 Reloaded-II 쪽이 오류를 남기고 동작하지 않습니다.
 
 ### 방법 A: Reloaded-II (추천)
@@ -70,7 +86,7 @@
 
 1. **원본 모드 설치:** 게임을 종료하고 [SMT5V Haptics v0.6](https://github.com/snm01234/PC-SMT5V-VIB/releases) 을 원래 방법대로 설치합니다 (`Project\Binaries\Win64\` 에 `xinput1_3.dll`, `SMT5V-Haptics.ini`). **이름은 바꾸지 않습니다.**
 2. **Reloaded-II에 게임 추가:** 아직 안 했다면 Reloaded-II에서 `+` (Add an Application) 를 누르고 `SMT5V\Project\Binaries\Win64\SMT5V-Win64-Shipping.exe` 를 선택합니다.
-3. **모드 넣기:** `build_reloaded.bat` 으로 만든 `heerelli.smtvv.dualsense.haptic` 폴더를 `Reloaded-II\Mods\` 에 복사합니다. 폴더를 zip으로 묶어 Reloaded-II 창에 끌어다 놓아도 됩니다.
+3. **모드 넣기:** `SMTVV-DualSense-Haptic-ReloadedII.zip` 을 Reloaded-II 창에 끌어다 놓습니다. 직접 빌드했다면 `heerelli.smtvv.dualsense.haptic` 폴더를 `Reloaded-II\Mods\` 에 복사합니다. 폴더를 zip으로 묶어 Reloaded-II 창에 끌어다 놓아도 됩니다.
 4. **모드 켜기:** Reloaded-II에서 게임을 선택하고 모드 목록의 **SMTVV DualSense Haptic** 을 체크합니다.
 5. (선택) `Win64\SMT5V-Haptics.ini` 맨 아래에 `SMT5V-Haptics.DualSense-section.ini` 내용을 붙여 넣습니다. 안 넣어도 기본값으로 동작합니다.
 6. 듀얼센스를 USB로 연결하고 **Reloaded-II에서 Launch Application** 으로 실행합니다.
@@ -182,7 +198,8 @@ SMT5V/Project/Binaries/Win64/
 
 ## 앞으로 할 일
 
-- [ ] 빌드 및 실기 테스트, Releases 배포
+- [x] 자동 빌드 및 Releases 배포
+- [ ] 실제 게임에서 테스트
 - [ ] 효과음 이름별 햅틱 규칙 (발소리, 메뉴 커서, 아이템 획득 등)
 - [ ] 전투 파형을 더 짧고 날카롭게 다듬기
 - [ ] 엔진 컷씬 햅틱 (가능한 경우) + 컷씬 햅틱 끄기 옵션
