@@ -53,7 +53,6 @@ INI 설정은 손대지 않아도 기본값으로 동작합니다. 자세한 내
 | 상황 | 효과음 이름 | 느낌 |
 | --- | --- | --- |
 | 마가츠히 위험 감지 | `fld_obj_maga_danger` | sound (넓게 퍼지는 짧은 울림) |
-| 대시 시작 | `fld_Pla603_dash` | normal (짧은 "톡") |
 | 내 턴 시작 | `btl_turn1_player` | guard (짧은 "탁" + 부드러운 저음) |
 | 적 턴 시작 | `btl_turn2_enemy` | guard (짧은 "탁" + 부드러운 저음) |
 | 동료(악마) 소환 | `sys_60_devil_summon` | sound (넓게 퍼지는 짧은 울림) |
@@ -61,7 +60,7 @@ INI 설정은 손대지 않아도 기본값으로 동작합니다. 자세한 내
 **적용 방법 (덮어쓰기)**
 1. 게임을 끕니다.
 2. 이 저장소의 [`config/SMT5V-Haptics.ini`](config/SMT5V-Haptics.ini) 를 받아서, 게임 `Project\Binaries\Win64\SMT5V-Haptics.ini` 에 **덮어씌웁니다.** (기존 파일은 백업해 두세요.)
-3. 게임을 실행합니다. 원본 로그 `SMT5V-HapticsPoC.log` 에 `SOUND CONFIG rules=8` 이 찍히면 적용된 것입니다.
+3. 게임을 실행합니다. 원본 로그 `SMT5V-HapticsPoC.log` 에 `SOUND CONFIG rules=7` 이 찍히면 적용된 것입니다.
 
 > 덮어쓰면 진동 세기가 기본값 5로 돌아갑니다. 게임 내 `진동 세기` 에서 다시 맞추면 됩니다.
 > 직접 고친 INI를 유지하고 싶다면, 덮어쓰는 대신 [`SMT5V-Haptics.SoundRules-extra.ini`](SMT5V-Haptics.SoundRules-extra.ini) 내용을 `[SoundRules]` 아래에 붙여 넣으세요.
