@@ -1,0 +1,21 @@
+{
+  "ModId": "heerelli.smtvv.dualsense.haptic",
+  "ModName": "SMTVV DualSense Haptic",
+  "ModAuthor": "Heerelli",
+  "ModVersion": "0.2.0",
+  "ModDescription": "SMT5V Haptics(snm01234)의 진동을 듀얼센스 USB 햅틱 피드백으로 바꿉니다. 원본 모드가 게임 폴더에 설치돼 있어야 합니다.",
+  "ModDll": "",
+  "ModIcon": "",
+  "ModR2RManagedDll32": "",
+  "ModR2RManagedDll64": "",
+  "ModNativeDll32": "",
+  "ModNativeDll64": "SMTVVDualSenseHaptic.dll",
+  "IsLibrary": false,
+  "ReleaseMetadataFileName": "",
+  "PluginData": {},
+  "IsUniversalMod": false,
+  "ModDependencies": [],
+  "OptionalDependencies": [],
+  "SupportedAppId": [ "smt5v-win64-shipping.exe" ],
+  "ProjectUrl": "https://github.com/Heerelli/SMTVV-Dualsence-Haptic"
+}

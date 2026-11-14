@@ -33,7 +33,7 @@
 #pragma comment(lib, "ole32.lib")
 #pragma comment(lib, "user32.lib")
 
-#define BRIDGE_VERSION "0.1"
+#define BRIDGE_VERSION "0.2"
 
 // ───────────────────────────── globals / config ─────────────────────────────
 static HMODULE g_self, g_core, g_sysXInput;
@@ -499,49 +499,136 @@ static DWORD WINAPI AudioThread(LPVOID) {
 }
 
 // ───────────────────────────── entry ────────────────────────────────────────
-static void Init() {
-    QueryPerformanceFrequency(&g_qpf);
-    GetModuleFileNameW(g_self, g_dir, MAX_PATH);
-    if (wchar_t* s = wcsrchr(g_dir, L'\\')) *s = 0;
+// Two build flavours share everything above:
+//   default            : xinput1_3.dll proxy, original mod renamed to SMT5VHapticsCore.dll
+//   SMT5V_RELOADED     : Reloaded-II native mod; the original mod stays installed as-is
+//                        (xinput1_3.dll, or d3d11.dll on Steam Deck) and is patched in place.
+
+static void SetPaths(const wchar_t* dir) {
+    wcscpy_s(g_dir, dir);
     swprintf_s(g_ini, L"%s\\SMT5V-Haptics.ini", g_dir);
     swprintf_s(g_logPath, L"%s\\SMT5V-DualSense.log", g_dir);
-    LoadConfig();
-    Log("bridge v%s loading (enabled=%d gain=%.2f passThrough=%d motorToHaptics=%d)",
-        BRIDGE_VERSION, g_cfg.enabled, g_cfg.gain, g_cfg.passThroughRumble, g_cfg.motorToHaptics);
+}
 
+static void DirOf(HMODULE m, wchar_t* out) {
+    GetModuleFileNameW(m, out, MAX_PATH);
+    if (wchar_t* s = wcsrchr(out, L'\\')) *s = 0;
+}
+
+static bool LoadSystemXInput() {
     wchar_t sys[MAX_PATH];
     GetSystemDirectoryW(sys, MAX_PATH);
     wcscat_s(sys, L"\\xinput1_3.dll");
     g_sysXInput = LoadLibraryW(sys);
-    if (!g_sysXInput) { Log("ERROR: cannot load %ls", sys); return; }
-    void* realSet = (void*)GetProcAddress(g_sysXInput, "XInputSetState");
-    g_realSetState = (PFN_SetState)realSet;
+    if (!g_sysXInput) { Log("ERROR: cannot load %ls", sys); return false; }
+    g_realSetState = (PFN_SetState)GetProcAddress(g_sysXInput, "XInputSetState");
+    return true;
+}
 
-    wchar_t corePath[MAX_PATH];
-    swprintf_s(corePath, L"%s\\SMT5VHapticsCore.dll", g_dir);
-    g_core = LoadLibraryW(corePath);
-    if (!g_core) { Log("ERROR: SMT5VHapticsCore.dll missing (rename the original mod's xinput1_3.dll), Win32=%lu", GetLastError()); return; }
-
+static bool PatchCore(HMODULE core) {
+    g_core = core;
     HMODULE k32 = GetModuleHandleW(L"kernel32.dll");
     g_realGetProcAddress = (PFN_GetProcAddress)GetProcAddress(k32, "GetProcAddress");
     g_realWriteFile = (PFN_WriteFile)GetProcAddress(k32, "WriteFile");
-    int a = PatchIat(g_core, (void*)g_realGetProcAddress, (void*)&Hook_GetProcAddress);
-    int b = PatchIat(g_core, (void*)g_realWriteFile, (void*)&Hook_WriteFile);
-    int c = realSet ? PatchResolvedPointers(g_core, realSet, (void*)&Hook_SetState) : 0;
+    void* realSet = (void*)GetProcAddress(g_sysXInput, "XInputSetState");
+    int a = PatchIat(core, (void*)g_realGetProcAddress, (void*)&Hook_GetProcAddress);
+    int b = PatchIat(core, (void*)g_realWriteFile, (void*)&Hook_WriteFile);
+    int c = realSet ? PatchResolvedPointers(core, realSet, (void*)&Hook_SetState) : 0;
     Log("core patched: GetProcAddress IAT=%d WriteFile IAT=%d resolved SetState=%d", a, b, c);
     if (!b) Log("WARNING: WriteFile not hooked - event-specific patterns disabled, raw motors only");
+    return a + b + c > 0;
+}
 
+static void StartEngine() {
+    LoadConfig();
+    Log("bridge v%s (%s) enabled=%d gain=%.2f passThrough=%d motorToHaptics=%d", BRIDGE_VERSION,
+#ifdef SMT5V_RELOADED
+        "Reloaded-II",
+#else
+        "proxy",
+#endif
+        g_cfg.enabled, g_cfg.gain, g_cfg.passThroughRumble, g_cfg.motorToHaptics);
     if (g_cfg.enabled) CloseHandle(CreateThread(nullptr, 0, AudioThread, nullptr, 0, nullptr));
 }
 
-BOOL WINAPI DllMain(HINSTANCE h, DWORD reason, LPVOID reserved) {
+#ifndef SMT5V_RELOADED
+// ---- proxy flavour -------------------------------------------------------
+static void Init() {
+    QueryPerformanceFrequency(&g_qpf);
+    wchar_t dir[MAX_PATH]; DirOf(g_self, dir); SetPaths(dir);
+    LoadConfig();
+    if (!LoadSystemXInput()) return;
+
+    wchar_t corePath[MAX_PATH];
+    swprintf_s(corePath, L"%s\\SMT5VHapticsCore.dll", g_dir);
+    HMODULE core = LoadLibraryW(corePath);
+    if (!core) { Log("ERROR: SMT5VHapticsCore.dll missing (rename the original mod's xinput1_3.dll), Win32=%lu", GetLastError()); return; }
+    PatchCore(core);
+    StartEngine();
+}
+
+BOOL WINAPI DllMain(HINSTANCE h, DWORD reason, LPVOID) {
     if (reason == DLL_PROCESS_ATTACH) {
         g_self = h;
         DisableThreadLibraryCalls(h);
         Init();
     } else if (reason == DLL_PROCESS_DETACH) {
         g_quit = true;
-        (void)reserved;
     }
     return TRUE;
 }
+
+#else
+// ---- Reloaded-II flavour -------------------------------------------------
+// The original mod is identified by its own export, not by file name.
+static HMODULE FindCoreModule() {
+    static const wchar_t* names[] = { L"xinput1_3.dll", L"SMT5VHapticsCore.dll", L"d3d11.dll" };
+    for (auto n : names) {
+        HMODULE m = GetModuleHandleW(n);
+        if (m && GetProcAddress(m, "SMT5VHapticsPoCStatus")) return m;
+    }
+    return nullptr;
+}
+
+static DWORD WINAPI ReloadedInitThread(LPVOID) {
+    // Log next to this mod until the original mod is found.
+    wchar_t dir[MAX_PATH]; DirOf(g_self, dir); SetPaths(dir);
+    if (!LoadSystemXInput()) return 0;
+
+    HMODULE core = nullptr;
+    for (int i = 0; i < 1200 && !core && !g_quit.load(); ++i) {   // up to 60 s
+        core = FindCoreModule();
+        if (!core) Sleep(50);
+    }
+    if (!core) {
+        Log("ERROR: SMT5V Haptics (original mod) not loaded - install it in Project\\Binaries\\Win64 first");
+        return 0;
+    }
+    // From here on, use the original mod's folder for the INI and the log.
+    DirOf(core, dir); SetPaths(dir);
+    if (!PatchCore(core)) {
+        // Nothing left to patch: the proxy flavour (xinput1_3.dll bridge) is already installed.
+        Log("ERROR: original mod already patched - remove the proxy xinput1_3.dll bridge or this Reloaded-II mod, not both");
+        return 0;
+    }
+    StartEngine();
+    return 0;
+}
+
+extern "C" __declspec(dllexport) void ReloadedStart() {
+    static std::atomic<bool> started{ false };
+    if (started.exchange(true)) return;
+    QueryPerformanceFrequency(&g_qpf);
+    CloseHandle(CreateThread(nullptr, 0, ReloadedInitThread, nullptr, 0, nullptr));
+}
+
+BOOL WINAPI DllMain(HINSTANCE h, DWORD reason, LPVOID) {
+    if (reason == DLL_PROCESS_ATTACH) {
+        g_self = h;
+        DisableThreadLibraryCalls(h);
+    } else if (reason == DLL_PROCESS_DETACH) {
+        g_quit = true;
+    }
+    return TRUE;
+}
+#endif

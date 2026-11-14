@@ -5,7 +5,7 @@
 [snm01234 님의 SMT5V Haptics (PC-SMT5V-VIB)](https://github.com/snm01234/PC-SMT5V-VIB) 는 게임에 없는 진동을 전투·필드 이벤트에 추가해 줍니다. 다만 일반 모터 진동(XInput)이라, 듀얼센스로 해도 단순한 "웅~" 진동만 납니다.
 이 모드는 그 앞에 끼워져서, 같은 이벤트를 **이벤트마다 다른 햅틱 파형**으로 바꿔 줍니다.
 
-> ⚠️ **현재 상태: v0.1 — 소스만 공개, 아직 빌드·실기 테스트 전입니다.**
+> ⚠️ **현재 상태: v0.2 — 소스만 공개, 아직 빌드·실기 테스트 전입니다.**
 > 배포용 DLL은 아직 없습니다. 직접 빌드해야 하며, 동작이 확인되면 Releases에 올릴 예정입니다.
 
 ---
@@ -17,6 +17,7 @@
 - **원본 모드를 수정하지 않음**: 원본 DLL은 이름만 바꿔서 그대로 사용합니다. 원본이 하던 일은 모두 원본이 합니다.
 - **안전한 대체 동작**: 듀얼센스(USB)가 없으면 진동을 원래대로 넘깁니다. 엑스박스 패드 등은 지금처럼 쓸 수 있습니다.
 - **게임 창이 비활성일 때 자동 음소거** (설정으로 끌 수 있음)
+- **두 가지 설치 방식**: Reloaded-II 모드로 설치하거나, 게임 폴더에 직접 넣는 방식 중 고를 수 있습니다.
 
 ## 햅틱이 나오는 때
 
@@ -43,6 +44,7 @@
 | 원본 모드 | [SMT5V Haptics v0.6](https://github.com/snm01234/PC-SMT5V-VIB/releases) |
 | 컨트롤러 | 듀얼센스 / 듀얼센스 엣지, **USB 유선 연결 필수** |
 | OS | Windows 10/11 64bit |
+| 모드 로더 (선택) | [Reloaded-II](https://github.com/Reloaded-Project/Reloaded-II) — Reloaded-II 방식으로 설치할 때만 필요 |
 | 빌드 | Visual Studio 2022 (C++ 데스크톱 개발 워크로드) |
 
 > 블루투스로 연결하면 햅틱 오디오 채널이 없어서 동작하지 않습니다. 이때는 진동이 원래대로 전달됩니다.
@@ -51,22 +53,52 @@
 ## 빌드
 
 1. 시작 메뉴에서 **"x64 Native Tools Command Prompt for VS 2022"** 를 엽니다.
-2. 이 저장소 폴더로 이동해서 실행합니다.
-   ```bat
-   build.bat
-   ```
-3. `out\xinput1_3.dll` 이 생기면 성공입니다.
+2. 이 저장소 폴더로 이동해서, 설치 방식에 맞는 스크립트를 실행합니다.
+
+| 설치 방식 | 실행 | 결과물 |
+| --- | --- | --- |
+| Reloaded-II | `build_reloaded.bat` | `out\reloaded\heerelli.smtvv.dualsense.haptic\` 폴더 (`SMTVVDualSenseHaptic.dll` + `ModConfig.json`) |
+| 게임 폴더 직접 | `build.bat` | `out\xinput1_3.dll` |
 
 ## 설치
 
-1. 게임을 완전히 종료합니다.
-2. 원본 모드 v0.6을 먼저 설치합니다 (게임 폴더의 `Project\Binaries\Win64\` 에 `xinput1_3.dll`, `SMT5V-Haptics.ini`).
-3. 같은 폴더에서 원본 모드의 `xinput1_3.dll` 이름을 **`SMT5VHapticsCore.dll`** 로 바꿉니다.
-4. 빌드한 `out\xinput1_3.dll` 을 같은 폴더에 복사합니다.
-5. `SMT5V-Haptics.ini` 맨 아래에 이 저장소의 `SMT5V-Haptics.DualSense-section.ini` 내용을 붙여 넣습니다. (붙여 넣지 않아도 기본값으로 동작합니다.)
-6. 듀얼센스를 USB로 연결하고 게임을 실행합니다.
+두 방식 중 **하나만** 쓰세요. 둘 다 설치하면 Reloaded-II 쪽이 오류를 남기고 동작하지 않습니다.
 
-설치 후 폴더 구조:
+### 방법 A: Reloaded-II (추천)
+
+원본 모드 파일을 건드리지 않아서 설치와 제거가 가장 간단합니다.
+
+1. **원본 모드 설치:** 게임을 종료하고 [SMT5V Haptics v0.6](https://github.com/snm01234/PC-SMT5V-VIB/releases) 을 원래 방법대로 설치합니다 (`Project\Binaries\Win64\` 에 `xinput1_3.dll`, `SMT5V-Haptics.ini`). **이름은 바꾸지 않습니다.**
+2. **Reloaded-II에 게임 추가:** 아직 안 했다면 Reloaded-II에서 `+` (Add an Application) 를 누르고 `SMT5V\Project\Binaries\Win64\SMT5V-Win64-Shipping.exe` 를 선택합니다.
+3. **모드 넣기:** `build_reloaded.bat` 으로 만든 `heerelli.smtvv.dualsense.haptic` 폴더를 `Reloaded-II\Mods\` 에 복사합니다. 폴더를 zip으로 묶어 Reloaded-II 창에 끌어다 놓아도 됩니다.
+4. **모드 켜기:** Reloaded-II에서 게임을 선택하고 모드 목록의 **SMTVV DualSense Haptic** 을 체크합니다.
+5. (선택) `Win64\SMT5V-Haptics.ini` 맨 아래에 `SMT5V-Haptics.DualSense-section.ini` 내용을 붙여 넣습니다. 안 넣어도 기본값으로 동작합니다.
+6. 듀얼센스를 USB로 연결하고 **Reloaded-II에서 Launch Application** 으로 실행합니다.
+
+```text
+Reloaded-II/Mods/heerelli.smtvv.dualsense.haptic/
+├─ ModConfig.json
+└─ SMTVVDualSenseHaptic.dll
+
+SMT5V/Project/Binaries/Win64/
+├─ SMT5V-Win64-Shipping.exe
+├─ xinput1_3.dll           ← 원본 모드 (그대로)
+└─ SMT5V-Haptics.ini       ← 원본 설정 (+ [DualSense] 섹션)
+```
+
+> Reloaded-II 방식에서도 설정 파일(`SMT5V-Haptics.ini`)과 로그(`SMT5V-DualSense.log`)는 게임의 `Win64` 폴더에 있습니다.
+> 원본 모드를 찾지 못하면 로그가 Reloaded-II 모드 폴더에 남습니다.
+
+### 방법 B: 게임 폴더에 직접 넣기
+
+Reloaded-II 없이 쓰는 방식입니다.
+
+1. 게임을 완전히 종료합니다.
+2. 원본 모드 v0.6을 먼저 설치합니다 (`Project\Binaries\Win64\` 에 `xinput1_3.dll`, `SMT5V-Haptics.ini`).
+3. 같은 폴더에서 원본 모드의 `xinput1_3.dll` 이름을 **`SMT5VHapticsCore.dll`** 로 바꿉니다.
+4. `build.bat` 으로 만든 `out\xinput1_3.dll` 을 같은 폴더에 복사합니다.
+5. (선택) `SMT5V-Haptics.ini` 맨 아래에 `SMT5V-Haptics.DualSense-section.ini` 내용을 붙여 넣습니다.
+6. 듀얼센스를 USB로 연결하고 Steam에서 실행합니다.
 
 ```text
 SMT5V/Project/Binaries/Win64/
@@ -112,16 +144,24 @@ SMT5V/Project/Binaries/Win64/
 | 햅틱이 전혀 안 남 | USB 유선 연결인지, 사운드 설정에 "Wireless Controller"가 있는지, 로그에 `HAPTICS ACTIVE`가 있는지 |
 | 이벤트와 상관없이 같은 느낌만 남 | 로그의 `WriteFile IAT` 값이 0이면 이벤트 판정이 안 되는 상태 |
 | 진동이 두 번 울림 | `PassThroughRumble=0` 인지 확인 |
-| 게임이 실행되지 않음 / 원본 모드가 안 됨 | `SMT5VHapticsCore.dll` 이름이 정확한지, 로그에 `SMT5VHapticsCore.dll missing` 이 있는지 |
+| 게임이 실행되지 않음 / 원본 모드가 안 됨 | (방법 B) `SMT5VHapticsCore.dll` 이름이 정확한지, 로그에 `SMT5VHapticsCore.dll missing` 이 있는지 |
+| Reloaded-II에서 햅틱이 안 남 | Reloaded-II에서 실행했는지, 모드가 체크돼 있는지, 원본 모드 `xinput1_3.dll` 이 `Win64` 에 있는지. Reloaded-II 모드 폴더에 `original mod not loaded` 로그가 있으면 원본 모드가 없는 것 |
+| 로그에 `original mod already patched` | 방법 A와 B를 함께 설치한 상태. 하나만 남기세요 |
 | 너무 세거나 약함 | 게임 내 `진동 세기` 게이지 또는 `Gain` 조절 |
 
 ## 제거
 
+**방법 A (Reloaded-II):** Reloaded-II에서 모드 체크를 끄거나 `Reloaded-II\Mods\heerelli.smtvv.dualsense.haptic` 폴더를 지웁니다. 원본 모드는 그대로 동작합니다.
+
+**방법 B (직접 설치):**
 1. 이 모드의 `xinput1_3.dll` 을 삭제합니다.
 2. `SMT5VHapticsCore.dll` 을 다시 `xinput1_3.dll` 로 이름을 바꿉니다.
-3. (선택) `SMT5V-Haptics.ini` 에서 `[DualSense]` 섹션과 `SMT5V-DualSense.log` 를 지웁니다.
+
+공통 (선택): `SMT5V-Haptics.ini` 에서 `[DualSense]` 섹션과 `SMT5V-DualSense.log` 를 지웁니다.
 
 ## 동작 원리 (개발자용)
+
+방법 B 기준입니다. 방법 A에서는 Reloaded-II가 이 모드를 불러오고, 이 모드가 이미 로드된 원본 모드를 찾아(자체 export `SMT5VHapticsPoCStatus` 로 식별) 같은 방식으로 패치합니다.
 
 ```text
 게임 ──► xinput1_3.dll (이 모드: 모든 export를 원본으로 전달)
@@ -138,6 +178,7 @@ SMT5V/Project/Binaries/Win64/
 
 - 원본 모드의 내부 주소를 하드코딩하지 않습니다. 원본 DLL의 import 테이블(`GetProcAddress`, `WriteFile`)을 패치하고, 이미 확보된 `XInputSetState` 포인터를 찾아 교체합니다.
 - export 이름과 ordinal은 원본 v0.6과 똑같이 맞췄습니다 (`src/exports.def`).
+- 하나의 소스(`src/dllmain.cpp`)에서 `SMT5V_RELOADED` 정의 여부로 두 방식을 빌드합니다. Reloaded-II 방식은 네이티브 모드 진입점 `ReloadedStart` 를 export 합니다.
 
 ## 앞으로 할 일
 
