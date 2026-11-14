@@ -33,7 +33,7 @@
 #pragma comment(lib, "ole32.lib")
 #pragma comment(lib, "user32.lib")
 
-#define BRIDGE_VERSION "0.2.2"
+#define BRIDGE_VERSION "0.2.3"
 
 #ifndef SMT5V_RELOADED
 // Export forwarders: names and ordinals mirror SMT5V Haptics v0.6 (see src/exports.def for the table).
@@ -145,7 +145,7 @@ static const Pattern kPatterns[K_COUNT] = {
     { "weak",     4, { { 100,  90,  0,   45, 1.00f, 0.35f }, { 100,  90, 85,  45, 0.35f, 1.00f },
                        { 80,  60, 170,   70, 1.00f, 1.00f }, {  45,  40, 170, 160, 0.90f, 0.90f } } },
     { "guard",    2, { { 260, 240,  0,   18, 0.70f, 0.70f }, {  40,  40, 10,  60, 0.35f, 0.35f } } },
-    { "sound",    2, { { 90,  80,   0,  120, 0.60f, 0.60f }, {  50,  45,  0, 180, 0.40f, 0.40f } } },
+    { "sound",    2, { { 95,  85,   0,   70, 0.65f, 0.65f }, {  55,  50,  0, 100, 0.45f, 0.45f } } },
     { "heal",     1, { { 160, 240,  0,  240, 0.25f, 0.25f } } },
 };
 

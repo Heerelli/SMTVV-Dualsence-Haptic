@@ -52,11 +52,11 @@ INI 설정은 손대지 않아도 기본값으로 동작합니다. 자세한 내
 
 | 상황 | 효과음 이름 | 느낌 |
 | --- | --- | --- |
-| 마가츠히 위험 감지 | `fld_obj_maga_danger` | sound (넓게 퍼지는 울림) |
+| 마가츠히 위험 감지 | `fld_obj_maga_danger` | sound (넓게 퍼지는 짧은 울림) |
 | 대시 시작 | `fld_Pla603_dash` | normal (짧은 "톡") |
 | 내 턴 시작 | `btl_turn1_player` | normal (짧은 "톡") |
 | 적 턴 시작 | `btl_turn2_enemy` | guard (짧은 "탁" + 부드러운 저음) |
-| 동료(악마) 소환 | `sys_60_devil_summon` | weak (좌 "퍽" → 우 "퍽" → 양손 "쾅") |
+| 동료(악마) 소환 | `sys_60_devil_summon` | sound (넓게 퍼지는 짧은 울림) |
 
 **적용 방법 (덮어쓰기)**
 1. 게임을 끕니다.
