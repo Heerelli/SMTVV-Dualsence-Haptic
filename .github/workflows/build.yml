@@ -47,6 +47,7 @@ jobs:
           New-Item -ItemType Directory -Force pkg/manual | Out-Null
           Copy-Item out/xinput1_3.dll pkg/manual/
           Copy-Item SMT5V-Haptics.DualSense-section.ini pkg/manual/
+          Copy-Item SMT5V-Haptics.SoundRules-extra.ini pkg/manual/
           Compress-Archive -Path pkg/manual/* -DestinationPath dist/SMTVV-DualSense-Haptic-Manual.zip -Force
           Get-ChildItem dist
 

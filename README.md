@@ -46,6 +46,26 @@ INI 설정은 손대지 않아도 기본값으로 동작합니다. 자세한 내
 - 회복, 빗나감, 무효에는 진동이 없습니다 (원본 모드와 동일).
 - 필드 이벤트의 종류는 `SMT5V-Haptics.ini`의 `[SoundRules]`에서 바꿀 수 있습니다. 예를 들어 `fld_chest_break3=sound`로 바꾸면 상자 파괴만 넓게 퍼지는 울림이 됩니다.
 
+## 추가 햅틱 (선택)
+
+원본 모드의 효과음 규칙으로 아래 순간에도 햅틱을 넣을 수 있습니다. 코드 수정 없이 설정만으로 동작합니다.
+
+| 상황 | 효과음 이름 | 느낌 |
+| --- | --- | --- |
+| 마가츠히 위험 감지 | `fld_obj_maga_danger` | sound (넓게 퍼지는 울림) |
+| 대시 시작 | `fld_Pla603_dash` | normal (짧은 "톡") |
+| 내 턴 시작 | `btl_turn1_player` | normal (짧은 "톡") |
+| 적 턴 시작 | `btl_turn2_enemy` | guard (짧은 "탁" + 부드러운 저음) |
+| 동료(악마) 소환 | `sys_60_devil_summon` | weak (좌 "퍽" → 우 "퍽" → 양손 "쾅") |
+
+**적용 방법**
+1. 게임 `Project\Binaries\Win64\SMT5V-Haptics.ini` 를 메모장으로 엽니다.
+2. `[SoundRules]` 아래 기존 줄 다음에 [`SMT5V-Haptics.SoundRules-extra.ini`](SMT5V-Haptics.SoundRules-extra.ini) 내용을 붙여 넣고 저장합니다.
+3. 게임 중 **F4** 를 누르거나 게임을 다시 실행합니다. 원본 로그 `SMT5V-HapticsPoC.log` 에 `SOUND CONFIG rules=8` 이 찍히면 적용된 것입니다.
+
+> 이 기능은 원본 모드의 `TraceSounds=1` 과 무관하게 동작하지만, 효과음 이름이 정확히 같아야 합니다.
+> 효과음 이름과 상황의 대응은 플레이 로그를 보고 추정한 것이라, 다른 순간에 울리면 그 줄을 지우세요.
+
 ## 요구 사항
 
 | 항목 | 내용 |
