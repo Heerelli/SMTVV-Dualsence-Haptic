@@ -41,8 +41,8 @@ jobs:
         shell: pwsh
         run: |
           New-Item -ItemType Directory -Force dist | Out-Null
-          # 1) Reloaded-II: zip contains the mod folder, drag it onto Reloaded-II
-          Compress-Archive -Path out/reloaded/heerelli.smtvv.dualsense.haptic -DestinationPath dist/SMTVV-DualSense-Haptic-ReloadedII.zip -Force
+          # 1) Reloaded-II: ModConfig.json at the zip root, like Reloaded-II's own published mods
+          Compress-Archive -Path out/reloaded/heerelli.smtvv.dualsense.haptic/* -DestinationPath dist/SMTVV-DualSense-Haptic-ReloadedII.zip -Force
           # 2) Manual install: files that go into Project/Binaries/Win64
           New-Item -ItemType Directory -Force pkg/manual | Out-Null
           Copy-Item out/xinput1_3.dll pkg/manual/
